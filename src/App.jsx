@@ -6,7 +6,7 @@ import {
 import {
   Sparkles, ChevronRight, ChevronLeft, RefreshCw, BarChart3, Users,
   Compass, Search, Layers, Network, ArrowLeft, Check, AlertCircle, Loader2,
-  Info, X, BookOpen, ChevronDown, ChevronUp, Clock
+  Info, X, BookOpen, ChevronDown, ChevronUp, Clock, Briefcase, MapPin
 } from 'lucide-react';
 import {
   localStore,
@@ -307,6 +307,165 @@ const TYPES = {
   },
 };
 
+// ==================== AI 時代的跨領域人才地圖(v7 新增)====================
+// 五群人才類型,將 16 種測驗類型映射到 AI 時代的職涯競爭力路徑。
+// 設計精神:聚焦於「社科背景如何在 AI 時代發揮獨特價值」,
+// 不做能力高低排序,而是讓每個類型都看到自己的生態位。
+const CAREER_ARCHETYPES = {
+  governance: {
+    id: 'governance',
+    name: 'AI 治理與倫理建構者',
+    english: 'The Governance Architect',
+    headline: '在 AI 越來越強的時代,制定規則、設計制度、把關倫理的「社會性架構師」',
+    coreCapabilities: '批判 + 結構 + 網絡',
+    capabilityCodes: ['C', 'S', 'N'],
+    types: ['ECIN', 'ECSN', 'FCIN', 'FCSN'],
+    role: '全球都在爭辯 AI 該怎麼管——演算法歧視、隱私侵犯、勞動衝擊、學術誠信、假訊息洪流。這些都不是純技術問題,**核心是價值衝突與制度設計**。社會不缺寫程式的人,缺的是能看見技術後果、能跟政策圈與技術圈雙向溝通的「治理翻譯者」。',
+    socialScienceValue: '你的批判思維、對權力結構的敏感度、對社會脈絡的理解,**正是工程師最缺乏的**。當 AI 公司急著推出新功能時,你能問出「這對誰有利、誰受影響?」「這會放大既有的不平等嗎?」——這些問題 AI 自己回答不出來,工程師也不一定看得見。',
+    careers: [
+      { category: '政府部門', items: '數位發展部、NCC、國科會、AI 影響評估辦公室' },
+      { category: '智庫與政策研究', items: '中研院、台經院、資策會 MIC' },
+      { category: '企業治理', items: 'Chief AI Ethics Officer、AI 風險長、合規長' },
+      { category: '跨國組織', items: 'OECD、UNESCO、世界經濟論壇 AI 治理倡議' },
+      { category: '學術界', items: 'AI 倫理、科技與社會(STS)、資訊社會學' },
+    ],
+    howToGrowIn: '批判(C)+ 結構(S)+ 網絡(N)三項缺一不可。批判讓你看見問題、結構讓你提出系統性解方、網絡讓你的聲音傳得出去。',
+  },
+
+  integrator: {
+    id: 'integrator',
+    name: '跨域整合者',
+    english: 'The Curator-Integrator',
+    headline: '把 AI 的能力翻譯成特定領域的解決方案,讓技術為人文服務的「雙語人才」',
+    coreCapabilities: '探索 + 結構 + 網絡',
+    capabilityCodes: ['E', 'S', 'N'],
+    types: ['ETIN', 'ETSN', 'FTSN'],
+    role: '真正改變世界的不是 AI 工具本身,而是「有人想到把 AI 用在某個從沒被想過的領域」。法律 AI 助理、教育 AI 評量、新聞編輯 AI 流程、社工個案管理、田野資料 AI 分析——這些都不是工程師獨力能做的,**需要深入理解該領域的人扮演整合者**。',
+    socialScienceValue: '社會科學訓練給你「跨脈絡翻譯」的能力——你聽得懂律師、社工、教師、記者、研究員的真實工作流程,也能設想 AI 如何切入。多數工程師看到的問題是「這個演算法精準度是 87% 還是 92%」,你看到的是「這個工具會不會被基層使用者抗拒」「這會不會無意間排除某些族群」。這種**領域敏感度**讓你能設計出真正可用的應用,而非實驗室裡漂亮但無人使用的 demo。',
+    careers: [
+      { category: '法律科技(LegalTech)', items: '法律 AI 助理、判決資料庫、合約自動化' },
+      { category: '教育科技(EdTech)', items: '個人化學習、AI 評量、教師助理工具' },
+      { category: '政府數位轉型', items: '智慧城市、公民參與平台、行政流程優化' },
+      { category: '媒體與內容產業', items: 'AI 編輯流程、事實查核工具、內容策展' },
+      { category: '文化資產', items: 'AI 藏品管理、博物館互動展示、無形文化資產數位化' },
+      { category: '產品與設計', items: 'UX 研究、產品策略、服務設計' },
+    ],
+    howToGrowIn: 'E(探索)+ S(結構)+ N(網絡)的三角組合。最好的起步是**找一個你深愛的領域並深耕**,不要當什麼都會但什麼都不精的 AI 通才。',
+  },
+
+  methodologist: {
+    id: 'methodologist',
+    name: '方法論工程師',
+    english: 'The Methodologist',
+    headline: '把 AI 工具精緻地嵌入研究、分析、評估的流程,讓嚴謹方法論在 AI 時代煥發新生的「精雕細琢者」',
+    coreCapabilities: '結構 + 批判',
+    capabilityCodes: ['S', 'C'],
+    types: ['ECSP', 'ETSP', 'FCSP', 'FTSP'],
+    role: '社科研究中,許多原本費時費力的工作——逐字稿轉錄、文本內容分析、跨國比較、政策文件編碼、田野筆記主題萃取——AI 可以協助加速十倍。但前提是有人懂方法論、懂 AI 限制、會設計可驗證的工作流程。**這種「方法論 × AI」的能力會成為下一代研究者的分水嶺**。',
+    socialScienceValue: '社會科學的核心是方法論——研究設計、效度信度、抽樣偏差、詮釋學、紮根理論。**這些是 AI 自己學不會的人類學問**。當你把這些方法論嵌入 AI 工作流程,你做出來的研究會比「亂用 ChatGPT 的人」扎實十倍,也比「拒絕用 AI 的傳統研究者」效率高十倍。雙翼齊備才能飛。',
+    careers: [
+      { category: '學術研究', items: '碩博士生、博後、年輕學者(AI 將拉開研究產出差距)' },
+      { category: '智庫與政策研究', items: '政策分析、社會影響評估、SROI 報告' },
+      { category: '市場調查與 UX 研究', items: '質性深度訪談、文本分析、消費者洞察' },
+      { category: '企業策略與顧問業', items: '競業分析、組織診斷' },
+      { category: '永續報告與 ESG', items: '揭露分析、TNFD/CDP 評估、利害關係人映射' },
+      { category: '新聞調查報導', items: '資料新聞、調查記者、深度報導' },
+    ],
+    howToGrowIn: '核心是 S(結構)+ C(批判)。光有結構容易產出「結構化但錯誤」的結果,光有批判容易停留在「我發現問題了」而沒有改進方法。如果你還偏 P(個人)端,未來可以再補上 N(網絡),讓你的方法論能傳承給研究團隊。',
+  },
+
+  catalyst: {
+    id: 'catalyst',
+    name: '數位社群引導者',
+    english: 'The Community Catalyst',
+    headline: '把使用經驗轉化為他人的成長養分,帶動組織與社群一起跟上 AI 時代的「人際樞紐」',
+    coreCapabilities: '探索 + 網絡',
+    capabilityCodes: ['E', 'N'],
+    types: ['ETIP', 'ETIN', 'FTIN'],
+    role: 'AI 工具再強,多數人不會主動學。**真正讓組織轉型的,往往是某個願意嘗試、樂於分享的人**——他們不一定是技術最強的,但他們是團隊裡的「催化劑」。這種角色在 AI 素養越來越重要的時代,價值正快速上升。',
+    socialScienceValue: '社科訓練讓你理解人——理解學習動機、抗拒心理、群體動力、組織文化。**這些「軟知識」決定了 AI 推廣的成敗**。多數工程師教 AI 工具時只會講功能;你會想到「對 50 歲的同事我該怎麼講」「對一個害怕被取代的基層員工我該怎麼陪伴」「怎麼設計一個讓主管不感到威脅的轉型路徑」。這是 AI 時代最需要、卻最少人在做的工作。',
+    careers: [
+      { category: '教育與培訓', items: '中小學教師、大學助教、企業內訓講師' },
+      { category: '線上內容創作', items: 'Hahow、PressPlay、YouTube 的 AI 教學、社群自媒體' },
+      { category: '企業數位轉型顧問', items: '協助組織導入 AI、處理員工焦慮' },
+      { category: 'NGO 與社區工作', items: '銀髮族 AI 素養、弱勢族群數位賦能' },
+      { category: '出版業', items: '教材設計、AI 應用書籍、線上課程設計' },
+      { category: 'HR 與組織發展', items: 'AI 轉型期的人才培訓' },
+    ],
+    howToGrowIn: '核心是 E(探索)+ N(網絡)。如果你還偏 I(直覺)端,可以再補上 S(結構),讓你的分享從「我覺得這個工具很酷」升級成「這個工具適用於這些情境,這樣用會最有效」——從感性推薦升級為方法論教學。',
+  },
+
+  guardian: {
+    id: 'guardian',
+    name: '批判性守門員',
+    english: 'The Critical Guardian',
+    headline: '在 AI 假訊息與幻覺氾濫的時代,守護資訊真實性與社會信任的「最後一道防線」',
+    coreCapabilities: '批判為核心',
+    capabilityCodes: ['C'],
+    types: ['ECIP', 'FCIP'],
+    role: 'AI 越強,假訊息越精緻。Deepfake 影音、AI 寫的假學術論文、AI 編造的歷史事件、AI 偽造的引用文獻——這些已經不是科幻情節,而是**正在發生的日常**。需要有人專職把關。',
+    socialScienceValue: '社會科學訓練的核心之一就是「批判性思考」——對來源的懷疑、對方法的審視、對權力的警覺、對偏見的覺察。**這正是 AI 時代最需要的能力**。當 AI 給你一個「看起來合理」的答案時,社科背景的批判反射會讓你問:「這個來源是什麼?這個觀點代表了誰?這個論述是否預設了某種價值立場?」——這些是 AI 自己回答不了的問題。',
+    careers: [
+      { category: '事實查核', items: 'Taiwan FactCheck Center、MyGoPen、Cofacts' },
+      { category: '新聞編輯與調查報導', items: '報社編輯、深度報導記者、資料新聞' },
+      { category: '法律合規', items: '法律事務所合規部、企業法遵' },
+      { category: '學術同儕審查', items: '期刊編輯、研究倫理審查委員(IRB)' },
+      { category: 'AI 紅隊測試(Red Team)', items: '找出 AI 系統的漏洞與偏差' },
+      { category: '內容審核與信任安全', items: '平台的內容政策、安全研究' },
+    ],
+    howToGrowIn: '核心是 C(批判),但光有批判力不夠,還需要「**值得守護的東西**」——對某個專業領域有深度才有意義。建議搭配你感興趣的議題(人權、環境、健康、選舉等),讓批判力有用武之地。如果想擴大影響力,可以再補上 S(結構)讓批判變成系統化的工作流程,或補上 N(網絡)讓你的把關能力傳承到團隊。',
+  },
+};
+
+// ─────────────────────────────────────────────
+// 類型 → 人才群映射表
+// 多屬制:某些類型(如 ETIN)同時屬於多群,呈現時兩條路徑都會列出。
+// ─────────────────────────────────────────────
+const TYPE_TO_ARCHETYPES = {
+  // 治理建構者
+  ECIN: ['governance'],
+  ECSN: ['governance'],
+  FCIN: ['governance'],
+  FCSN: ['governance'],
+  // 跨域整合者
+  ETSN: ['integrator'],
+  FTSN: ['integrator'],
+  // 多屬:跨域整合者 + 數位社群引導者
+  ETIN: ['integrator', 'catalyst'],
+  // 方法論工程師
+  ECSP: ['methodologist'],
+  ETSP: ['methodologist'],
+  FCSP: ['methodologist'],
+  FTSP: ['methodologist'],
+  // 數位社群引導者
+  ETIP: ['catalyst'],
+  FTIN: ['catalyst'],
+  // 批判性守門員
+  ECIP: ['guardian'],
+  FCIP: ['guardian'],
+  // 特殊處理:起點型
+  FTIP: ['starter'],
+};
+
+// FTIP 特殊類型(起點型探索者)
+const STARTER_ARCHETYPE = {
+  id: 'starter',
+  name: '起點型探索者',
+  english: 'The Open Starter',
+  headline: '站在進步空間最大的位置,所有路徑都向你開放',
+  isStarter: true,
+  description: '你目前的測驗結果是 FTIP——四個維度都還在發展中。這不是壞事,反而是個珍貴的時刻:因為**沒有先入為主的習慣**,你可以最自由地選擇想往哪走。',
+  advice: '不要急著被分類,先做一件事——**選一條你最有興趣的路徑試走 3-6 個月**。',
+  pathHints: [
+    { path: 'AI 治理建構者', hint: '對「制度與規則」感興趣 → 先強化批判與結構' },
+    { path: '跨域整合者', hint: '對「特定領域應用」感興趣 → 先深耕一個領域' },
+    { path: '方法論工程師', hint: '享受「研究、分析、寫作」 → 先學結構化方法' },
+    { path: '數位社群引導者', hint: '享受「教別人、帶領團隊」 → 先強化分享習慣' },
+    { path: '批判性守門員', hint: '重視「真實、嚴謹、把關」 → 先培養查證習慣' },
+  ],
+  closing: '試走過程中,你會自然從 FTIP 移動到某個更具體的類型。半年後重做測驗,會看到位置改變——這就是成長的具體證據。',
+};
+
 // ==================== 計算邏輯 ====================
 function calculateType(answers) {
   const dimSums = { EF: 0, TC: 0, IS: 0, PN: 0 };
@@ -385,7 +544,7 @@ function genId() {
 }
 
 // ==================== 元件：歡迎頁 ====================
-function Welcome({ onStart, onViewStats, onShowMethodology, lastResult }) {
+function Welcome({ onStart, onViewStats, onShowMethodology, onShowCareerMap, lastResult }) {
   const [classCode, setClassCode] = useState('');
   const [nickname, setNickname] = useState('');
   const [statsCode, setStatsCode] = useState('');
@@ -396,7 +555,7 @@ function Welcome({ onStart, onViewStats, onShowMethodology, lastResult }) {
       <div className="mb-12">
         <div className="flex items-center gap-2 mb-6 text-sm tracking-widest" style={{ color: COLORS.warmGray }}>
           <div className="h-px w-12" style={{ background: COLORS.accent }} />
-          <span style={{ fontFamily: 'Fraunces, serif' }}>AI USER TYPOLOGY · v6.0</span>
+          <span style={{ fontFamily: 'Fraunces, serif' }}>AI USER TYPOLOGY · v7.0</span>
         </div>
         <h1
           className="text-6xl md:text-7xl mb-4 leading-none"
@@ -541,13 +700,24 @@ function Welcome({ onStart, onViewStats, onShowMethodology, lastResult }) {
         <div className="text-xs" style={{ color: COLORS.warmGray, fontFamily: 'Fraunces, serif' }}>
           共 {QUESTIONS.length} 題 · 約 6-8 分鐘 · 沒有對錯之分
         </div>
-        <button
-          onClick={onShowMethodology}
-          className="text-xs underline transition-colors hover:opacity-70"
-          style={{ color: COLORS.warmGray, fontFamily: '"Noto Sans TC", sans-serif' }}
-        >
-          查看方法論說明
-        </button>
+        <div className="flex items-center justify-center gap-4 text-xs" style={{ color: COLORS.warmGray }}>
+          <button
+            onClick={onShowMethodology}
+            className="underline transition-colors hover:opacity-70"
+            style={{ fontFamily: '"Noto Sans TC", sans-serif' }}
+          >
+            查看方法論說明
+          </button>
+          <span>·</span>
+          <button
+            onClick={onShowCareerMap}
+            className="underline transition-colors hover:opacity-70 inline-flex items-center gap-1"
+            style={{ fontFamily: '"Noto Sans TC", sans-serif' }}
+          >
+            <MapPin size={11} />
+            AI 時代的跨領域人才地圖
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1088,8 +1258,351 @@ function MethodologyModal({ onClose }) {
   );
 }
 
+// ==================== v7 元件:結果頁的「AI 時代潛在角色」區塊 ====================
+function CareerArchetypeSection({ type, onShowCareerMap }) {
+  const archetypeIds = TYPE_TO_ARCHETYPES[type] || [];
+  const isStarter = archetypeIds.includes('starter');
+
+  // FTIP 起點型特殊處理
+  if (isStarter) {
+    return (
+      <div className="mb-10 p-8" style={{ background: COLORS.paper, border: `2px solid ${COLORS.gold}` }}>
+        <h3 className="text-xl mb-4 flex items-center gap-2" style={{ color: COLORS.ink, fontFamily: '"Noto Serif TC", serif' }}>
+          <MapPin size={20} style={{ color: COLORS.gold }} />
+          你在 AI 時代的潛在角色
+        </h3>
+        <div className="mb-4">
+          <div className="text-sm tracking-widest mb-1" style={{ color: COLORS.warmGray, fontFamily: 'Fraunces, serif' }}>
+            {STARTER_ARCHETYPE.english}
+          </div>
+          <div className="text-2xl mb-2" style={{ color: COLORS.ink, fontFamily: '"Noto Serif TC", serif' }}>
+            {STARTER_ARCHETYPE.name}
+          </div>
+          <div className="text-sm italic" style={{ color: COLORS.inkSoft }}>
+            {STARTER_ARCHETYPE.headline}
+          </div>
+        </div>
+        <p
+          className="text-base leading-loose mb-4"
+          style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}
+        >
+          {renderBold(STARTER_ARCHETYPE.description)}
+        </p>
+        <p
+          className="text-base leading-loose mb-4"
+          style={{ color: COLORS.ink, fontFamily: '"Noto Sans TC", sans-serif' }}
+        >
+          {renderBold(STARTER_ARCHETYPE.advice)}
+        </p>
+        <button
+          onClick={onShowCareerMap}
+          className="mt-2 inline-flex items-center gap-2 text-sm underline transition-colors hover:opacity-70"
+          style={{ color: COLORS.accent, fontFamily: '"Noto Sans TC", sans-serif' }}
+        >
+          <MapPin size={14} />
+          展開完整的人才地圖,看看每條路徑長什麼樣子
+        </button>
+      </div>
+    );
+  }
+
+  // 一般類型:可能對應到一個或多個人才群
+  const archetypes = archetypeIds.map((id) => CAREER_ARCHETYPES[id]).filter(Boolean);
+
+  if (archetypes.length === 0) return null;
+
+  return (
+    <div className="mb-10 p-8" style={{ background: COLORS.paper, border: `2px solid ${COLORS.teal}` }}>
+      <h3 className="text-xl mb-2 flex items-center gap-2" style={{ color: COLORS.ink, fontFamily: '"Noto Serif TC", serif' }}>
+        <Briefcase size={20} style={{ color: COLORS.teal }} />
+        你在 AI 時代的潛在角色
+      </h3>
+      <p className="text-sm mb-6" style={{ color: COLORS.warmGray, fontFamily: '"Noto Sans TC", sans-serif' }}>
+        {archetypes.length === 1
+          ? '依你目前的類型,以下是最適合你發揮的人才路徑——尤其針對社會科學背景的學生:'
+          : `依你目前的類型,你同時具備了 ${archetypes.length} 條路徑的潛力:`}
+      </p>
+
+      <div className="space-y-6">
+        {archetypes.map((arch, idx) => (
+          <div
+            key={arch.id}
+            className={idx > 0 ? 'pt-6 border-t' : ''}
+            style={{ borderColor: COLORS.border }}
+          >
+            <div className="flex items-baseline gap-2 mb-2 flex-wrap">
+              <div className="text-xs tracking-widest" style={{ color: COLORS.teal, fontFamily: 'Fraunces, serif' }}>
+                {arch.english}
+              </div>
+              <div className="text-xs px-2 py-0.5" style={{ background: 'white', color: COLORS.warmGray, fontFamily: 'Fraunces, serif' }}>
+                {arch.coreCapabilities}
+              </div>
+            </div>
+            <h4 className="text-2xl mb-2" style={{ color: COLORS.ink, fontFamily: '"Noto Serif TC", serif' }}>
+              {arch.name}
+            </h4>
+            <p className="text-sm italic mb-3" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+              {arch.headline}
+            </p>
+            <div className="mb-3">
+              <div className="text-xs mb-1.5 font-medium" style={{ color: COLORS.accent, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                社科背景的特殊價值
+              </div>
+              <p className="text-base leading-loose" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                {renderBold(arch.socialScienceValue)}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={onShowCareerMap}
+        className="mt-6 w-full py-3 flex items-center justify-center gap-2 text-sm transition-colors hover:opacity-90"
+        style={{ background: COLORS.teal, color: 'white', fontFamily: '"Noto Sans TC", sans-serif' }}
+      >
+        <MapPin size={14} />
+        探索完整人才地圖(看其他四條路徑)
+      </button>
+    </div>
+  );
+}
+
+// ==================== v7 元件:完整的人才地圖 Modal ====================
+function CareerMapModal({ currentType, onClose }) {
+  const userArchetypeIds = currentType ? (TYPE_TO_ARCHETYPES[currentType] || []) : [];
+
+  // 所有人才群(依設計上的順序排列)
+  const allArchetypes = [
+    CAREER_ARCHETYPES.governance,
+    CAREER_ARCHETYPES.integrator,
+    CAREER_ARCHETYPES.methodologist,
+    CAREER_ARCHETYPES.catalyst,
+    CAREER_ARCHETYPES.guardian,
+  ];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto"
+      style={{ background: 'rgba(26, 35, 50, 0.7)' }}
+      onClick={onClose}
+    >
+      <div
+        className="max-w-4xl w-full my-8 relative"
+        style={{ background: COLORS.cream }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 transition-colors hover:opacity-70 z-10"
+          style={{ color: COLORS.ink }}
+        >
+          <X size={20} />
+        </button>
+
+        <div className="p-8 md:p-12">
+          {/* Header */}
+          <div className="mb-8 pb-6 border-b" style={{ borderColor: COLORS.border }}>
+            <div className="text-xs tracking-widest mb-2" style={{ color: COLORS.warmGray, fontFamily: 'Fraunces, serif' }}>
+              CAREER ARCHETYPES · 五群 AI 時代人才類型
+            </div>
+            <h1 className="text-3xl md:text-4xl mb-3" style={{ color: COLORS.ink, fontFamily: '"Noto Serif TC", serif' }}>
+              AI 時代的跨領域人才地圖
+            </h1>
+            <p className="text-sm leading-relaxed" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+              AI 越強,越會取代「純技術操作」的工作;越無法取代「需要判斷、脈絡、社會性」的工作。
+              社會科學訓練的核心優勢——對人、對社會、對權力、對倫理的敏感度——在 AI 時代不是過時的技能,而是
+              <strong style={{ color: COLORS.ink }}>最稀缺的互補性能力</strong>。
+            </p>
+            <p className="text-sm leading-relaxed mt-3" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+              關鍵不是「你會不會用 AI」,而是「<strong style={{ color: COLORS.ink }}>AI 無法取代你什麼</strong>」、
+              「<strong style={{ color: COLORS.ink }}>你能跟 AI 形成什麼樣的能力組合</strong>」。
+            </p>
+          </div>
+
+          {/* 你目前的位置(僅在有測驗結果時顯示) */}
+          {currentType && (
+            <div className="mb-8 p-4" style={{ background: COLORS.paper, border: `1px solid ${COLORS.gold}` }}>
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <span className="text-xs tracking-widest" style={{ color: COLORS.warmGray, fontFamily: 'Fraunces, serif' }}>
+                  你的位置
+                </span>
+                <span className="text-base font-medium" style={{ color: COLORS.ink, fontFamily: 'Fraunces, serif' }}>
+                  {currentType}
+                </span>
+                <span className="text-sm" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                  → {userArchetypeIds.includes('starter')
+                    ? '起點型探索者(所有路徑開放)'
+                    : userArchetypeIds.map((id) => CAREER_ARCHETYPES[id]?.name).filter(Boolean).join('、')}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* FTIP 特殊區塊 */}
+          {userArchetypeIds.includes('starter') && (
+            <div className="mb-10 p-6" style={{ background: 'white', border: `2px solid ${COLORS.gold}` }}>
+              <h2 className="text-2xl mb-2 flex items-center gap-2" style={{ color: COLORS.ink, fontFamily: '"Noto Serif TC", serif' }}>
+                {STARTER_ARCHETYPE.name}
+                <span className="text-sm font-normal" style={{ color: COLORS.warmGray, fontFamily: 'Fraunces, serif', fontStyle: 'italic' }}>
+                  {STARTER_ARCHETYPE.english}
+                </span>
+              </h2>
+              <p className="text-sm italic mb-4" style={{ color: COLORS.inkSoft }}>
+                {STARTER_ARCHETYPE.headline}
+              </p>
+              <p className="text-sm leading-loose mb-4" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                {renderBold(STARTER_ARCHETYPE.description)}
+              </p>
+              <p className="text-base leading-loose mb-4" style={{ color: COLORS.ink, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                {renderBold(STARTER_ARCHETYPE.advice)}
+              </p>
+              <ul className="space-y-2 mb-4">
+                {STARTER_ARCHETYPE.pathHints.map((hint, idx) => (
+                  <li key={idx} className="text-sm leading-relaxed" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                    <span style={{ color: COLORS.accent }}>·</span> <strong style={{ color: COLORS.ink }}>{hint.path}</strong>:{hint.hint}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-sm leading-loose" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                {STARTER_ARCHETYPE.closing}
+              </p>
+            </div>
+          )}
+
+          {/* 五群人才類型 */}
+          <div className="space-y-10">
+            {allArchetypes.map((arch) => {
+              const isUserArchetype = userArchetypeIds.includes(arch.id);
+              const includesUserType = currentType && arch.types.includes(currentType);
+
+              return (
+                <section
+                  key={arch.id}
+                  className="p-6"
+                  style={{
+                    background: 'white',
+                    borderLeft: `4px solid ${isUserArchetype ? COLORS.accent : COLORS.border}`,
+                  }}
+                >
+                  {/* 群標題 */}
+                  <div className="mb-4">
+                    <div className="flex items-baseline gap-2 mb-2 flex-wrap">
+                      <div className="text-xs tracking-widest" style={{ color: COLORS.warmGray, fontFamily: 'Fraunces, serif' }}>
+                        {arch.english}
+                      </div>
+                      <div className="text-xs px-2 py-0.5" style={{ background: COLORS.paper, color: COLORS.inkSoft, fontFamily: 'Fraunces, serif' }}>
+                        核心能力:{arch.coreCapabilities}
+                      </div>
+                      {isUserArchetype && (
+                        <div className="text-xs px-2 py-0.5 font-medium" style={{ background: COLORS.accent, color: 'white' }}>
+                          你的位置
+                        </div>
+                      )}
+                    </div>
+                    <h2 className="text-2xl mb-1" style={{ color: COLORS.ink, fontFamily: '"Noto Serif TC", serif' }}>
+                      {arch.name}
+                    </h2>
+                    <p className="text-sm italic" style={{ color: COLORS.inkSoft }}>
+                      {arch.headline}
+                    </p>
+                  </div>
+
+                  {/* 包含類型 */}
+                  <div className="mb-4 flex items-baseline gap-2 flex-wrap">
+                    <span className="text-xs" style={{ color: COLORS.warmGray, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                      包含類型:
+                    </span>
+                    {arch.types.map((t) => (
+                      <span
+                        key={t}
+                        className="text-xs px-2 py-0.5 tracking-widest"
+                        style={{
+                          background: t === currentType ? COLORS.accent : COLORS.paper,
+                          color: t === currentType ? 'white' : COLORS.inkSoft,
+                          fontFamily: 'Fraunces, serif',
+                        }}
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* 社會角色 */}
+                  <div className="mb-4">
+                    <div className="text-xs mb-1.5 font-medium" style={{ color: COLORS.warmGray, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                      社會角色與獨特價值
+                    </div>
+                    <p className="text-sm leading-loose" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                      {renderBold(arch.role)}
+                    </p>
+                  </div>
+
+                  {/* 社科背景的特殊價值 */}
+                  <div className="mb-4">
+                    <div className="text-xs mb-1.5 font-medium" style={{ color: COLORS.accent, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                      社科背景的特殊價值
+                    </div>
+                    <p className="text-sm leading-loose" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                      {renderBold(arch.socialScienceValue)}
+                    </p>
+                  </div>
+
+                  {/* 典型職涯 */}
+                  <div className="mb-4">
+                    <div className="text-xs mb-2 font-medium" style={{ color: COLORS.warmGray, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                      典型職涯方向
+                    </div>
+                    <ul className="space-y-1">
+                      {arch.careers.map((c, idx) => (
+                        <li key={idx} className="text-sm leading-relaxed" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                          <strong style={{ color: COLORS.ink }}>{c.category}</strong>:{c.items}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* 想進這群需要強化的能力 */}
+                  <div className="pt-4 mt-4 border-t" style={{ borderColor: COLORS.border }}>
+                    <div className="text-xs mb-1.5 font-medium" style={{ color: COLORS.teal, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                      想進這群需要強化的能力
+                    </div>
+                    <p className="text-sm leading-loose" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+                      {renderBold(arch.howToGrowIn)}
+                    </p>
+                  </div>
+                </section>
+              );
+            })}
+          </div>
+
+          {/* 結語 */}
+          <div className="mt-10 p-6" style={{ background: COLORS.paper, border: `1px solid ${COLORS.border}` }}>
+            <h3 className="text-lg mb-3" style={{ color: COLORS.ink, fontFamily: '"Noto Serif TC", serif' }}>
+              不論走哪條路徑,「不可替代的人類能力」都是核心
+            </h3>
+            <p className="text-sm leading-loose mb-3" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+              AI 時代真正稀缺的能力都包含:
+            </p>
+            <ul className="space-y-1.5 text-sm leading-relaxed" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+              <li><strong style={{ color: COLORS.ink }}>判斷力(Judgment)</strong>:在複雜、不確定、價值衝突的情境下做決定</li>
+              <li><strong style={{ color: COLORS.ink }}>脈絡理解(Context)</strong>:知道不同情境下「合適」的標準不同</li>
+              <li><strong style={{ color: COLORS.ink }}>倫理反思(Ethics)</strong>:不只問「能不能做」,更問「該不該做」</li>
+              <li><strong style={{ color: COLORS.ink }}>人際協調(Coordination)</strong>:說服、談判、調解、團隊建設</li>
+              <li><strong style={{ color: COLORS.ink }}>跨域翻譯(Translation)</strong>:把 A 領域的問題翻譯成 B 領域聽得懂的語言</li>
+            </ul>
+            <p className="text-sm leading-loose mt-4" style={{ color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}>
+              這些都是社會科學訓練的核心,而且短期內 AI 仍難以取代。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ==================== 元件：結果頁 ====================
-function Result({ result, nickname, classCode, onSaveToClass, onRestart, onViewStats, savedToClass, onShowMethodology }) {
+function Result({ result, nickname, classCode, onSaveToClass, onRestart, onViewStats, savedToClass, onShowMethodology, onShowCareerMap }) {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const t = TYPES[result.type];
@@ -1282,6 +1795,12 @@ function Result({ result, nickname, classCode, onSaveToClass, onRestart, onViewS
         </p>
       </div>
 
+      {/* v7 新增:AI 時代的潛在角色 */}
+      <CareerArchetypeSection
+        type={result.type}
+        onShowCareerMap={onShowCareerMap}
+      />
+
       {/* Save / Action */}
       <div className="border-t pt-8" style={{ borderColor: COLORS.border }}>
         {classCode && !savedToClass && (
@@ -1341,14 +1860,24 @@ function Result({ result, nickname, classCode, onSaveToClass, onRestart, onViewS
           )}
         </div>
 
-        <button
-          onClick={onShowMethodology}
-          className="w-full py-3 flex items-center justify-center gap-2 text-sm border transition-colors hover:opacity-70"
-          style={{ borderColor: COLORS.border, color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}
-        >
-          <BookOpen size={14} />
-          查看方法論說明(附錄)
-        </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <button
+            onClick={onShowCareerMap}
+            className="w-full py-3 flex items-center justify-center gap-2 text-sm border transition-colors hover:opacity-70"
+            style={{ borderColor: COLORS.border, color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}
+          >
+            <MapPin size={14} />
+            探索完整人才地圖
+          </button>
+          <button
+            onClick={onShowMethodology}
+            className="w-full py-3 flex items-center justify-center gap-2 text-sm border transition-colors hover:opacity-70"
+            style={{ borderColor: COLORS.border, color: COLORS.inkSoft, fontFamily: '"Noto Sans TC", sans-serif' }}
+          >
+            <BookOpen size={14} />
+            查看方法論說明(附錄)
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1656,6 +2185,7 @@ export default function App() {
   const [statsCode, setStatsCode] = useState('');
   const [lastResult, setLastResult] = useState(null);
   const [showMethodology, setShowMethodology] = useState(false);
+  const [showCareerMap, setShowCareerMap] = useState(false);
 
   // 字體已於 index.html 預先載入,不需要 useEffect 動態插入
 
@@ -1730,6 +2260,7 @@ export default function App() {
           onStart={handleStart}
           onViewStats={handleViewStats}
           onShowMethodology={() => setShowMethodology(true)}
+          onShowCareerMap={() => setShowCareerMap(true)}
           lastResult={lastResult}
         />
       )}
@@ -1749,6 +2280,7 @@ export default function App() {
           onViewStats={handleViewStats}
           savedToClass={savedToClass}
           onShowMethodology={() => setShowMethodology(true)}
+          onShowCareerMap={() => setShowCareerMap(true)}
         />
       )}
       {stage === 'stats' && (
@@ -1760,6 +2292,13 @@ export default function App() {
 
       {showMethodology && (
         <MethodologyModal onClose={() => setShowMethodology(false)} />
+      )}
+
+      {showCareerMap && (
+        <CareerMapModal
+          currentType={result?.type}
+          onClose={() => setShowCareerMap(false)}
+        />
       )}
     </div>
   );
