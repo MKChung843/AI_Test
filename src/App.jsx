@@ -88,9 +88,9 @@ const DIMENSIONS = [
     poles: ['I 直覺', 'S 結構'],
     polesShort: ['直覺', '結構'],
     icon: Layers,
-    description: '你的 prompt 是隨意對話，還是有明確的結構與設計？',
-    concept: '個人撰寫 prompt 與操作 AI 的方法論成熟度——是憑直覺對話，還是有結構化的設計與系統？',
-    operational: '透過 prompt 撰寫方式、模板化程度、失敗應對、主動學習、任務拆解等指標觀察。',
+    description: '你的提問是隨意對話，還是有明確的設計與規劃？',
+    concept: '個人跟 AI 互動的方法論成熟度——是憑直覺對話，還是會有意識地設計提問方式、規劃對話流程？',
+    operational: '透過提問前的目標設定、提問句型的精細度、失敗時的應對方式、對自己對話過程的反思、複雜任務的拆解能力等指標觀察。',
     theory: '對應 Liu 等人 (2023) 整理的 prompt engineering 研究脈絡，以及 Flavell (1979) 的元認知 (metacognition) 概念——對自己 AI 互動過程的反思與優化能力。',
     interpretation: {
       high: '偏向「結構者」：你有清楚的 prompt 設計方法與可重用模板。優勢是輸出品質穩定可控；盲點可能是過度結構限制創意。',
@@ -106,7 +106,7 @@ const DIMENSIONS = [
     icon: Network,
     description: '你主要把 AI 當成個人工具使用，還是會跟他人交流、共學、協作？',
     concept: '個人 AI 使用在「人際協作網絡」中的位置——是孤立地獨自使用，還是融入分享、共學、協調的社群網絡之中？',
-    operational: '透過知識共享行為、向他人學習的意願、團隊協調、社群參與、討論意願等指標觀察。',
+    operational: '透過共學行為、知識分享、向他人學習、團隊協調、社群參與、討論意願等指標觀察。',
     theory: '對應 Hutchins (1995) 的分散式認知 (distributed cognition) 概念——智慧不只在個人腦中，也分散在工具、夥伴、社群之中；以及 Wenger (1998) 的實踐社群 (communities of practice) 觀點，強調知識在協作互動中產生與深化。',
     interpretation: {
       high: '偏向「網絡型」：你已將 AI 使用融入協作網絡——會分享、會討論、會跟他人共學。優勢是知識成長速度快、影響力擴及團隊；進階方向是把這份協作能力轉化為更系統的知識共享機制。',
@@ -120,38 +120,38 @@ const DIMENSIONS = [
 const QUESTIONS = [
   // ========== 維度 1: EF ==========
   { dim: 'EF', text: '看到剛發布的 AI 新工具，我會馬上去試試看。', reverse: false },
-  { dim: 'EF', text: '我經常追蹤 AI 領域的新聞與產品發布。', reverse: false },
+  { dim: 'EF', text: '我經常關注 AI 領域的新消息與新工具。', reverse: false },
   { dim: 'EF', text: '我傾向同時使用多種不同的 AI 工具，而不是專注在一兩個。', reverse: false },
-  { dim: 'EF', text: '面對新任務，我會主動尋找最適合的 AI 工具，而不是用熟悉的。', reverse: false },
-  { dim: 'EF', text: '別人分享新的 AI 應用技巧，我會找時間嘗試各種新方法。', reverse: false },
-  { dim: 'EF', text: '我會主動了解新發布的 AI 模型或工具，與既有工具有什麼差異。', reverse: false },
+  { dim: 'EF', text: '遇到新類型的作業或任務，我會先想想哪個 AI 工具最合適，而不是直接用熟悉的那個。', reverse: false },
+  { dim: 'EF', text: '看到別人分享 AI 的有趣用法，我會想試試看。', reverse: false },
+  { dim: 'EF', text: '新的 AI 工具出來時，我會去了解它跟既有工具有什麼不一樣。', reverse: false },
   { dim: 'EF', text: '我習慣使用一兩個 AI 工具搞定大部分事情，不太想換。', reverse: true },
-  { dim: 'EF', text: '只有在實際需要時，我才會評估是否採用新的 AI 工具。', reverse: true },
+  { dim: 'EF', text: '除非真的有需要，否則我不會主動去找新的 AI 工具。', reverse: true },
 
   // ========== 維度 2: TC ==========
-  { dim: 'TC', text: 'AI 給出的引用文獻，我一定會查原文確認其真實性。', reverse: false },
-  { dim: 'TC', text: 'AI 提供的統計數據或事實陳述，我會交叉驗證原始來源。', reverse: false },
+  { dim: 'TC', text: 'AI 給出的引用文獻，我會嘗試查原文確認其真實性。', reverse: false },
+  { dim: 'TC', text: 'AI 給的統計數據或重要事實，我會找其他資料來源核對一遍。', reverse: false },
   { dim: 'TC', text: '當 AI 的答案跟我既有的認知衝突時，我會先質疑 AI 的回答。', reverse: false },
-  { dim: 'TC', text: 'AI 寫的程式碼，我會逐行檢查並測試，而不是直接執行。', reverse: false },
+  { dim: 'TC', text: 'AI 幫我整理的資料（表格、清單、摘要等），我不會直接採用，會先檢查內容是否正確。', reverse: false },
   { dim: 'TC', text: '對於重要決定，我絕不會只依賴 AI 的建議。', reverse: false },
   { dim: 'TC', text: '即使 AI 答得很有自信，我也會懷疑它可能在編造內容。', reverse: false },
   { dim: 'TC', text: 'AI 的答案看起來合理，我通常就直接採用。', reverse: true },
   { dim: 'TC', text: '比起花時間查資料庫或教科書，我覺得直接問 AI 更划算。', reverse: true },
 
   // ========== 維度 3: IS ==========
-  { dim: 'IS', text: '我寫 prompt 時會先構思結構與目標，再仔細寫出來。', reverse: false },
-  { dim: 'IS', text: '我有自己反覆使用並持續優化的 prompt 模板。', reverse: false },
-  { dim: 'IS', text: '面對不滿意的答案，我會分析問題在哪，系統性調整 prompt。', reverse: false },
+  { dim: 'IS', text: '跟 AI 開始一段對話前，我會先想清楚自己想得到什麼結果。', reverse: false },
+  { dim: 'IS', text: '我有幾個常用的提問句型或對話模板，會反覆使用並改進。', reverse: false },
+  { dim: 'IS', text: '答案不理想時，我會想想是我問法的問題還是 AI 的限制，再換個方式問。', reverse: false },
   { dim: 'IS', text: '我會回顧自己跟 AI 的對話，思考下次怎麼問會更好。', reverse: false },
   { dim: 'IS', text: '面對複雜任務，我會將任務拆解成步驟，分階段請 AI 處理。', reverse: false },
-  { dim: 'IS', text: '我會在 prompt 裡明確指定輸出格式、語氣或風格。', reverse: false },
-  { dim: 'IS', text: '我寫 prompt 通常想到什麼問什麼，邊問邊調整。', reverse: true },
+  { dim: 'IS', text: '我會清楚告訴 AI 我想要的回答形式（例如字數、格式、語氣）。', reverse: false },
+  { dim: 'IS', text: '我跟 AI 的對話通常想到什麼問什麼，邊問邊調整。', reverse: true },
   { dim: 'IS', text: '對我來說，跟 AI 對話自然就會了，不需要刻意學技巧。', reverse: true },
 
   // ========== 維度 4: PN ==========
   // v6 重新定錨：聚焦於「人際協作網絡」，將「流程整合」題移除（與 IS 維度概念重疊）
-  { dim: 'PN', text: '我經常與同學或同事分享 AI 使用心得，共同優化方法。', reverse: false },
-  { dim: 'PN', text: '我會把好用的 prompt 或工作流主動分享給同學/同事。', reverse: false },
+  { dim: 'PN', text: '我會跟同學或同事一起摸索、發展新的 AI 使用方法。', reverse: false },
+  { dim: 'PN', text: '我會主動把好用的提問技巧或使用方式分享給同學/同事。', reverse: false },
   { dim: 'PN', text: '我經常從別人的 AI 使用方式學到新東西或新技巧。', reverse: false },
   { dim: 'PN', text: '我會在團體作業或專案中協調大家如何使用 AI。', reverse: false },
   { dim: 'PN', text: '我會閱讀或追蹤他人分享的 AI 使用案例（社群、論壇、教學影片等）。', reverse: false },
@@ -555,7 +555,7 @@ function Welcome({ onStart, onViewStats, onShowMethodology, onShowCareerMap, las
       <div className="mb-12">
         <div className="flex items-center gap-2 mb-6 text-sm tracking-widest" style={{ color: COLORS.warmGray }}>
           <div className="h-px w-12" style={{ background: COLORS.accent }} />
-          <span style={{ fontFamily: 'Fraunces, serif' }}>AI USER TYPOLOGY · v7.0</span>
+          <span style={{ fontFamily: 'Fraunces, serif' }}>AI USER TYPOLOGY · v8.0</span>
         </div>
         <h1
           className="text-6xl md:text-7xl mb-4 leading-none"
